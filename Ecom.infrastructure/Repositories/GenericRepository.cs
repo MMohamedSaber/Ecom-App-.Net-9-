@@ -23,7 +23,8 @@ namespace Ecom.infrastructure.Repositories
 
         public  async Task DeleteAsync(int id)
         {
-            var entity=_context.Set<T>().FindAsync(id);
+            var entity= await _context.Set<T>().FindAsync(id);
+
                _context.Remove(entity);
             await _context.SaveChangesAsync();
 
@@ -51,6 +52,7 @@ namespace Ecom.infrastructure.Repositories
         {
             var entity =await _context.Set<T>().FindAsync(Id);
             return entity;
+
         }
 
         public async Task<T> GetByIdAsync(int Id, params Expression<Func<T, object>>[] Include)

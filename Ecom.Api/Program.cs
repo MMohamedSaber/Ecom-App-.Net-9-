@@ -1,4 +1,3 @@
-
 using Ecom.infrastructure;
 namespace Ecom.Api
 {
@@ -13,8 +12,8 @@ namespace Ecom.Api
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
-
             builder.Services.infrastructureConfiguration(builder.Configuration);
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             var app = builder.Build();
 
