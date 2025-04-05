@@ -18,7 +18,7 @@
             {
                 200 => "Done",
                 400 => "Bad Request",
-                404 => "Not Found",
+                404 => "Not Found Resours",
                 401 => "UnAuthorized",
                 500 => "server Error",
                 _ => null,
