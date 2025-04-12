@@ -4,9 +4,11 @@ using Ecom.Core.DTOs;
 using Ecom.Core.Entities.Product;
 using Ecom.Core.Interfaces;
 using Ecom.Core.Services;
+using Ecom.Core.Sharing;
 using Ecom.infrastructure.Data;
 using Ecom.infrastructure.Data.Migrations;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Quic;
 
 namespace Ecom.infrastructure.Repositories
 {
@@ -55,6 +57,48 @@ namespace Ecom.infrastructure.Repositories
             _context.Products.Remove(product);
              await _context.SaveChangesAsync    ();
         }
+
+        public async Task<IEnumerable<ProductDTO>> GetAllAsync(ProductParams productParams)
+        {
+            var query = _context.Products
+                .Include(p=>p.Category)
+                .Include(p=>p.Photos)
+                .AsNoTracking();
+
+
+            //filtering by word
+            if (!string.IsNullOrEmpty(productParams.Searching))
+            {
+                var searchWords = productParams.Searching.Split(' ');
+                query = query.Where(m => searchWords.All(word =>
+                    m.Name.ToLower().Contains(word.ToLower()) ||
+                    m.Description.ToLower().Contains(word.ToLower())
+                ));
+            }
+
+            //filtering by categoryId
+            if (productParams.CategoryId.HasValue)
+                query = query.Where(m => m.CategoryId== productParams.CategoryId);
+
+
+
+            if (productParams.Sort is not  null)
+            {
+
+                query = productParams.Sort switch
+                {
+                    "PriceAsn" => query.OrderBy(p => p.NewPrice),
+                    "PriceDes" => query.OrderByDescending(p => p.NewPrice),
+                    _ => query.OrderBy(p => p.Name),
+                };
+            }
+
+            query = query.Skip((productParams.PageSize) * (productParams.PageNumber -1) ).Take(productParams.PageSize);
+            var result = mapper.Map<List<ProductDTO>>(query);
+            return result;
+
+        }
+
 
         public async Task<bool> UpdateAsync(UpdateProductDto productDto)
         {
