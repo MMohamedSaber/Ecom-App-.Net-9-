@@ -48,7 +48,7 @@ namespace Ecom.Api.Controllers
 
             });
 
-            return Ok(new ResponsApi(200, result));
+            return Ok(new ResponsApi(200, "done"));
         }
 
         [HttpPost("active-account")]

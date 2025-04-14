@@ -49,7 +49,6 @@ namespace Ecom.infrastructure.Repositories.Services
             var token=handler.CreateToken(tokenDecriptor);
 
             return handler.WriteToken(token);
-
         }
 
     }

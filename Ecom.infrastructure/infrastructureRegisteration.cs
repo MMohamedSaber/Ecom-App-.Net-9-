@@ -58,6 +58,11 @@ namespace Ecom.infrastructure
                     .AddEntityFrameworkStores<AppDbContext>()
                     .AddDefaultTokenProviders();
 
+
+            // Apply register service
+            services.AddScoped<IOrderService, OrderService>();
+
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
